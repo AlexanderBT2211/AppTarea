@@ -1,11 +1,11 @@
 # AppTarea — React Native
-**Computación Web y Móvil · UTEM INFO8 · Tarea 1**
+Computación Web y Móvil
 
 ---
 
-## 📱 Descripción
+# Descripción
 
-App móvil con React Native + Expo que cumple los 3 requisitos:
+App móvil con React Nativo
 
 | Requisito | Implementación |
 |-----------|---------------|
@@ -15,7 +15,7 @@ App móvil con React Native + Expo que cumple los 3 requisitos:
 
 ---
 
-## 🗂 Estructura del proyecto
+## Estructura del proyecto
 
 ```
 AppTarea/
@@ -34,7 +34,7 @@ AppTarea/
 
 ---
 
-## ⚙️ Instalación y ejecución
+## Instalación y ejecución
 
 ### Requisitos
 - Node.js 18+
@@ -58,7 +58,7 @@ npx expo start
 
 ---
 
-## 🧩 Decisiones técnicas explicadas
+##  Decisiones técnicas explicadas
 
 ### Context API para el tema (`ThemeContext.js`)
 - `createContext` + `useState` para estado global del modo dark/light.
@@ -94,7 +94,7 @@ npx expo start
 
 ---
 
-## ✅ Checklist de requisitos
+## Checklist de requisitos
 
 - [x] Selector dark/light mode
 - [x] Formulario completo con validación
