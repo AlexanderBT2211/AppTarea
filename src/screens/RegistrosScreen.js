@@ -116,8 +116,13 @@ export default function RegistrosScreen({ navigation }) {
                 </View>
               )}
             </View>
-            <TouchableOpacity onPress={() => confirmarEliminar(item.id, item.nombre)}
-              style={s.btnEliminar} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+            <TouchableOpacity
+              onPress={() => confirmarEliminar(item.id, item.nombre)}
+              style={s.btnEliminar}
+              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+              accessibilityRole="button"
+              accessibilityLabel={item.nombre ? `Eliminar registro de ${item.nombre}` : 'Eliminar registro'}
+            >
               <Text style={s.btnEliminarText}>✕</Text>
             </TouchableOpacity>
           </View>
