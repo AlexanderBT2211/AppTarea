@@ -1,85 +1,68 @@
 // src/context/ThemeContext.js
-// Contexto global para manejar el tema dark/light de la aplicación.
-//
-// Patrón utilizado: Context API + custom hook (useTheme)
-// Esto evita prop drilling y centraliza toda la lógica de temas.
+// Maneja el contexto global del tema dark/light
 
 import React, { createContext, useState, useContext, useMemo } from 'react';
 
-// ─── Paleta de colores ────────────────────────────────────────────────────────
-// Definida FUERA del componente para que sea una referencia estable
-// (no se recrea en cada render).
 export const themes = {
   light: {
     name: 'light',
-    background: '#F5F7FA',
+    background: '#FFF8F0',
     surface: '#FFFFFF',
-    surfaceAlt: '#EEF0F5',
-    primary: '#4F6CF7',
-    primaryDark: '#3A56D4',
-    text: '#1A1D2E',
-    textSecondary: '#6B7280',
-    border: '#E2E5EF',
-    error: '#EF4444',
-    success: '#10B981',
+    surfaceAlt: '#FFF0E0',
+    primary: '#FF7A00',
+    primaryDark: '#E06800',
+    text: '#2D1A00',
+    textSecondary: '#7A5C3A',
+    border: '#FFD199',
+    error: '#FF4D6A',
+    success: '#06C48C',
     inputBg: '#FFFFFF',
-    cardShadow: '#00000014',   // rgba sin template string (compatible con StyleSheet)
-    switchTrackFalse: '#D1D5DB',
-    switchTrackTrue: '#4F6CF7',
+    switchTrackFalse: '#FFD199',
+    switchTrackTrue: '#FF7A00',
     switchThumb: '#FFFFFF',
-    placeholder: '#9CA3AF',
-    tagBg: '#EEF2FF',
-    tagText: '#4F6CF7',
-    btnEliminarBg: '#FECACA', // color sólido en lugar de hex+opacidad dinámica
+    placeholder: '#C49A6C',
+    tagBg: '#FFF0D0',
+    tagText: '#E06800',
+    btnEliminarBg: '#FFE0E6',
+    accent: '#00CFCF',
+    accentBg: '#E0FAFA',
+    yellow: '#FFD000',
+    yellowBg: '#FFFBE0',
   },
   dark: {
     name: 'dark',
-    background: '#0D0F1A',
-    surface: '#161927',
-    surfaceAlt: '#1E2130',
-    primary: '#6C8EFF',
-    primaryDark: '#4F6CF7',
-    text: '#F0F2FF',
-    textSecondary: '#8892B0',
-    border: '#252840',
-    error: '#FF6B6B',
+    background: '#1A0F00',
+    surface: '#2D1A00',
+    surfaceAlt: '#3D2500',
+    primary: '#FF9A30',
+    primaryDark: '#FF7A00',
+    text: '#FFF3E0',
+    textSecondary: '#C49A6C',
+    border: '#5A3A10',
+    error: '#FF6B85',
     success: '#34D399',
-    inputBg: '#1E2130',
-    cardShadow: '#00000066',
-    switchTrackFalse: '#374151',
-    switchTrackTrue: '#4F6CF7',
+    inputBg: '#3D2500',
+    switchTrackFalse: '#5A3A10',
+    switchTrackTrue: '#FF7A00',
     switchThumb: '#FFFFFF',
-    placeholder: '#4B5563',
-    tagBg: '#1E2545',
-    tagText: '#6C8EFF',
-    btnEliminarBg: '#3B1212',
+    placeholder: '#7A5C3A',
+    tagBg: '#4D2800',
+    tagText: '#FF9A30',
+    btnEliminarBg: '#4D1520',
+    accent: '#00CFCF',
+    accentBg: '#003D3D',
+    yellow: '#FFD000',
+    yellowBg: '#3D3000',
   },
 };
 
-// ─── Contexto ─────────────────────────────────────────────────────────────────
-// Se exporta por si algún componente necesita consumirlo directamente,
-// aunque lo recomendado es usar el hook useTheme().
 export const ThemeContext = createContext(null);
 
-// ─── Provider ─────────────────────────────────────────────────────────────────
 export const ThemeProvider = ({ children }) => {
   const [isDark, setIsDark] = useState(false);
-
-  // useCallback no aplica aquí (es una función sin dependencias),
-  // pero useMemo en el value evita re-renders innecesarios en consumidores
-  // cuando el componente padre re-renderiza por razones ajenas al tema.
   const toggleTheme = () => setIsDark(prev => !prev);
-
   const theme = isDark ? themes.dark : themes.light;
-
-  // useMemo: el objeto value solo cambia cuando isDark o theme cambia,
-  // evitando que todos los consumidores re-rendericen sin necesidad.
-  const value = useMemo(
-    () => ({ theme, isDark, toggleTheme }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [isDark]
-  );
-
+  const value = useMemo(() => ({ theme, isDark, toggleTheme }), [isDark]);
   return (
     <ThemeContext.Provider value={value}>
       {children}
@@ -87,16 +70,8 @@ export const ThemeProvider = ({ children }) => {
   );
 };
 
-// ─── Hook personalizado ───────────────────────────────────────────────────────
-// Siempre usar este hook en lugar de useContext(ThemeContext) directamente.
-// Lanza un error descriptivo si se usa fuera del Provider.
 export const useTheme = () => {
   const context = useContext(ThemeContext);
-  if (context === null) {
-    throw new Error(
-      'useTheme() debe usarse dentro de <ThemeProvider>. ' +
-      'Asegúrate de que App esté envuelto en ThemeProvider.'
-    );
-  }
+  if (context === null) throw new Error('useTheme() debe usarse dentro de <ThemeProvider>');
   return context;
 };
