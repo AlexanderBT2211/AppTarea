@@ -153,7 +153,11 @@ export default function RegistrosScreen({ navigation }) {
             />
           </View>
           {registros.length > 0 && (
-            <TouchableOpacity onPress={confirmarLimpiarTodo} style={s.btnLimpiar}>
+            <TouchableOpacity
+              onPress={confirmarLimpiarTodo}
+              style={s.btnLimpiar}
+              accessibilityRole="button"
+              accessibilityLabel="Limpiar todo">
               <Text style={s.btnLimpiarText}>Limpiar todo</Text>
             </TouchableOpacity>
           )}
