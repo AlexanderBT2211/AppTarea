@@ -95,6 +95,7 @@ export default function FormScreen({ navigation }) {
           <View style={s.themeToggle}>
             <Text>{isDark ? '🌙' : '☀️'}</Text>
             <Switch value={isDark} onValueChange={toggleTheme}
+              accessibilityLabel={isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
               trackColor={{ false: theme.switchTrackFalse, true: theme.switchTrackTrue }}
               thumbColor={theme.switchThumb} />
           </View>
