@@ -158,7 +158,8 @@ export default function FormScreen({ navigation }) {
             <Switch value={form.recibirNotificaciones}
               onValueChange={(v) => actualizar('recibirNotificaciones', v)}
               trackColor={{ false: theme.switchTrackFalse, true: theme.switchTrackTrue }}
-              thumbColor={theme.switchThumb} />
+              thumbColor={theme.switchThumb}
+              accessibilityLabel="Recibir notificaciones" />
           </View>
 
           <TouchableOpacity style={[s.btnGuardar, guardando && s.btnDisabled]}
