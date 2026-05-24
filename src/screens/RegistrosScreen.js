@@ -57,13 +57,19 @@ export default function RegistrosScreen({ navigation }) {
 
   const confirmarLimpiarTodo = useCallback(() => {
     if (registros.length === 0) return;
-    Alert.alert('Limpiar todo', `¿Eliminar los ${registros.length} registros?`, [
-      { text: 'Cancelar', style: 'cancel' },
-      { text: 'Eliminar todo', style: 'destructive', onPress: async () => {
-        try { await limpiarTodo(); setRegistros([]); }
-        catch { Alert.alert('Error', 'No se pudo limpiar.'); }
-      }},
-    ]);
+    Alert.alert(
+      'Limpiar todo',
+      registros.length === 1
+        ? '¿Eliminar el registro?'
+        : `¿Eliminar los ${registros.length} registros?`,
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        { text: 'Eliminar todo', style: 'destructive', onPress: async () => {
+          try { await limpiarTodo(); setRegistros([]); }
+          catch { Alert.alert('Error', 'No se pudo limpiar.'); }
+        }},
+      ]
+    );
   }, [registros.length]);
 
   const formatearFecha = useCallback((iso) => {
