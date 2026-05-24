@@ -180,7 +180,12 @@ export default function RegistrosScreen({ navigation }) {
           <Text style={s.emptyIcon}>📋</Text>
           <Text style={s.emptyTitle}>Sin registros aún</Text>
           <Text style={s.emptyDesc}>Los registros que guardes aparecerán aquí.</Text>
-          <TouchableOpacity style={s.btnNuevo} onPress={() => navigation.navigate('Formulario')}>
+          <TouchableOpacity
+            style={s.btnNuevo}
+            onPress={() => navigation.navigate('Formulario')}
+            accessibilityRole="button"
+            accessibilityLabel="Crear primer registro"
+          >
             <Text style={s.btnNuevoText}>Crear primer registro</Text>
           </TouchableOpacity>
         </View>
