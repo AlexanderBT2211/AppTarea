@@ -1,5 +1,6 @@
 // src/screens/FormScreen.js
-// Pantalla con el formulario de registro
+
+// Diseño minimalista con inputs underline y botones tipo pill
 
 import React, { useState, useCallback } from 'react';
 import {
@@ -30,6 +31,7 @@ const validarForm = (form) => {
   return errores;
 };
 
+// Campo con solo borde inferior (estilo minimalista underline)
 function InputField({ label, error, theme, style, ...props }) {
   const s = makeStyles(theme);
   return (
@@ -68,12 +70,12 @@ export default function FormScreen({ navigation }) {
     setGuardando(true);
     try {
       await guardarRegistro(form);
-      Alert.alert('¡Guardado! ✓', 'El registro se almacenó en tu dispositivo.', [
+      Alert.alert('Guardado ✓', 'El registro se almacenó en tu dispositivo.', [
         { text: 'Ver registros', onPress: () => navigation.navigate('Registros') },
         { text: 'Nuevo registro', style: 'cancel', onPress: () => { setForm(FORM_INICIAL); setErrores({}); } },
       ]);
-    } catch (error) {
-      Alert.alert('Error al guardar', 'Verifica el espacio disponible en tu dispositivo.');
+    } catch {
+      Alert.alert('Error', 'No se pudo guardar. Verifica el espacio en tu dispositivo.');
     } finally {
       setGuardando(false);
     }
@@ -84,41 +86,70 @@ export default function FormScreen({ navigation }) {
       style={{ flex: 1, backgroundColor: theme.background }}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <ScrollView style={s.container} contentContainerStyle={s.scrollContent}
-        showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
-
+      <ScrollView
+        style={s.container}
+        contentContainerStyle={s.scrollContent}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+      >
+        {/* ── HEADER minimalista ── */}
         <View style={s.header}>
-          <View style={s.headerTexto}>
-            <Text style={s.titulo}>Nuevo Registro</Text>
-            <Text style={s.subtitulo}>Los campos con * son obligatorios</Text>
+          <View>
+            <Text style={s.titulo}>Nuevo{'\n'}Registro</Text>
           </View>
+          {/* Toggle sin caja, solo switch + emoji */}
           <View style={s.themeToggle}>
-            <Text>{isDark ? '🌙' : '☀️'}</Text>
-            <Switch value={isDark} onValueChange={toggleTheme}
-              accessibilityLabel={isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+            <Text style={s.themeEmoji}>{isDark ? '🌙' : '☀️'}</Text>
+            <Switch
+              value={isDark}
+              onValueChange={toggleTheme}
               trackColor={{ false: theme.switchTrackFalse, true: theme.switchTrackTrue }}
-              thumbColor={theme.switchThumb} />
+              thumbColor={theme.switchThumb}
+            />
           </View>
         </View>
 
-        <View style={s.accentBand}>
-          <Text style={s.accentBandText}>📋  Formulario de Contacto</Text>
-        </View>
+        {/* ── FORMULARIO ── */}
+        <View style={s.formSection}>
 
-        <View style={s.card}>
-          <InputField label="Nombre completo *" placeholder="Ej: Juan Pérez"
-            value={form.nombre} onChangeText={(v) => actualizar('nombre', v)}
-            error={errores.nombre} theme={theme} autoCapitalize="words" maxLength={60} />
+          {/* Nombre */}
+          <InputField
+            label="Nombre completo *"
+            placeholder="Juan Pérez"
+            value={form.nombre}
+            onChangeText={(v) => actualizar('nombre', v)}
+            error={errores.nombre}
+            theme={theme}
+            autoCapitalize="words"
+            maxLength={60}
+          />
 
-          <InputField label="Correo electrónico *" placeholder="correo@ejemplo.com"
-            value={form.email} onChangeText={(v) => actualizar('email', v.toLowerCase())}
-            error={errores.email} theme={theme} keyboardType="email-address"
-            autoCapitalize="none" maxLength={100} />
+          {/* Email */}
+          <InputField
+            label="Correo electrónico *"
+            placeholder="correo@ejemplo.com"
+            value={form.email}
+            onChangeText={(v) => actualizar('email', v.toLowerCase())}
+            error={errores.email}
+            theme={theme}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            maxLength={100}
+          />
 
-          <InputField label="Teléfono (opcional)" placeholder="+56 9 1234 5678"
-            value={form.telefono} onChangeText={(v) => actualizar('telefono', v)}
-            error={errores.telefono} theme={theme} keyboardType="phone-pad" maxLength={20} />
+          {/* Teléfono */}
+          <InputField
+            label="Teléfono"
+            placeholder="+56 9 1234 5678  (opcional)"
+            value={form.telefono}
+            onChangeText={(v) => actualizar('telefono', v)}
+            error={errores.telefono}
+            theme={theme}
+            keyboardType="phone-pad"
+            maxLength={20}
+          />
 
+          {/* Categoría — pills horizontales */}
           <View style={s.fieldGroup}>
             <Text style={s.label}>Categoría</Text>
             <View style={s.categorias}>
@@ -126,55 +157,78 @@ export default function FormScreen({ navigation }) {
                 const isActive = form.categoria === cat;
                 const colorCat = COLORES_CATEGORIA[index];
                 return (
-                  <TouchableOpacity key={cat}
-                    style={[s.catBtn, isActive && { backgroundColor: colorCat, borderColor: colorCat }]}
-                    onPress={() => actualizar('categoria', cat)} activeOpacity={0.7}>
-                    <Text style={[s.catText, isActive && s.catTextActive]}>{cat}</Text>
+                  <TouchableOpacity
+                    key={cat}
+                    style={[
+                      s.catPill,
+                      // Inactivo: outline del color — Activo: relleno del color
+                      isActive
+                        ? { backgroundColor: colorCat, borderColor: colorCat }
+                        : { borderColor: colorCat },
+                    ]}
+                    onPress={() => actualizar('categoria', cat)}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[s.catText, { color: isActive ? '#FFFFFF' : colorCat }]}>
+                      {cat}
+                    </Text>
                   </TouchableOpacity>
                 );
               })}
             </View>
           </View>
 
+          {/* Mensaje */}
           <View style={s.fieldGroup}>
             <Text style={s.label}>Mensaje *</Text>
             <TextInput
               style={[s.input, s.textArea, errores.mensaje ? s.inputError : null]}
-              placeholder="Escribe tu mensaje aquí..." placeholderTextColor={theme.placeholder}
-              value={form.mensaje} onChangeText={(v) => actualizar('mensaje', v)}
-              multiline numberOfLines={4} textAlignVertical="top" maxLength={500} />
+              placeholder="Escribe tu mensaje..."
+              placeholderTextColor={theme.placeholder}
+              value={form.mensaje}
+              onChangeText={(v) => actualizar('mensaje', v)}
+              multiline
+              numberOfLines={4}
+              textAlignVertical="top"
+              maxLength={500}
+            />
             <View style={s.mensajeFooter}>
               {!!errores.mensaje && <Text style={s.errorText}>{errores.mensaje}</Text>}
               <Text style={[s.charCount, { marginLeft: errores.mensaje ? 0 : 'auto' }]}>
-                {form.mensaje.length}/500</Text>
+                {form.mensaje.length}/500
+              </Text>
             </View>
           </View>
 
+          {/* Switch notificaciones — limpio sin separador */}
           <View style={s.switchRow}>
-            <View style={s.switchLabels}>
-              <Text style={s.label}>Recibir notificaciones</Text>
-              <Text style={s.switchDesc}>Activar para recibir actualizaciones</Text>
+            <View>
+              <Text style={s.label}>Notificaciones</Text>
+              <Text style={s.switchDesc}>Recibir actualizaciones</Text>
             </View>
-            <Switch value={form.recibirNotificaciones}
+            <Switch
+              value={form.recibirNotificaciones}
               onValueChange={(v) => actualizar('recibirNotificaciones', v)}
               trackColor={{ false: theme.switchTrackFalse, true: theme.switchTrackTrue }}
               thumbColor={theme.switchThumb}
-              accessibilityLabel="Recibir notificaciones" />
+            />
           </View>
 
-          <TouchableOpacity style={[s.btnGuardar, guardando && s.btnDisabled]}
+          {/* Botón guardar — pill sólido naranja */}
+          <TouchableOpacity
+            style={[s.btnGuardar, guardando && s.btnDisabled]}
             onPress={handleGuardar}
             disabled={guardando}
             activeOpacity={0.85}
-            accessibilityRole="button"
-            accessibilityLabel="Guardar registro"
-            accessibilityState={{ disabled: guardando }}>
-            {guardando ? <ActivityIndicator color="#fff" size="small" /> :
-              <Text style={s.btnText}>Guardar registro</Text>}
+          >
+            {guardando
+              ? <ActivityIndicator color="#fff" size="small" />
+              : <Text style={s.btnText}>Guardar registro</Text>
+            }
           </TouchableOpacity>
-        </View>
 
-        <Text style={s.footer}>🔒 Los datos se almacenan solo en tu dispositivo</Text>
+          <Text style={s.footer}>🔒 Solo se guarda en tu dispositivo</Text>
+        </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -182,42 +236,109 @@ export default function FormScreen({ navigation }) {
 
 const makeStyles = (theme) => StyleSheet.create({
   container: { flex: 1, backgroundColor: theme.background },
-  scrollContent: { padding: 20, paddingBottom: 48 },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start',
-    marginBottom: 16, paddingTop: Platform.OS === 'ios' ? 50 : 20 },
-  headerTexto: { flex: 1, marginRight: 12 },
-  titulo: { fontSize: 28, fontWeight: '800', color: theme.primary, letterSpacing: -0.5 },
-  subtitulo: { fontSize: 13, color: theme.textSecondary, marginTop: 4 },
-  themeToggle: { flexDirection: 'row', alignItems: 'center', gap: 6,
-    backgroundColor: theme.accentBg, paddingHorizontal: 10, paddingVertical: 8,
-    borderRadius: 20, borderWidth: 1.5, borderColor: theme.accent },
-  accentBand: { backgroundColor: theme.accent, borderRadius: 12, paddingVertical: 10,
-    paddingHorizontal: 16, marginBottom: 16, alignItems: 'center' },
-  accentBandText: { color: '#FFFFFF', fontWeight: '700', fontSize: 14 },
-  card: { backgroundColor: theme.surface, borderRadius: 20, padding: 20,
-    borderWidth: 2, borderColor: theme.border, shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.08, shadowRadius: 12, elevation: 4 },
-  fieldGroup: { marginBottom: 18 },
-  label: { fontSize: 13, fontWeight: '700', color: theme.text, marginBottom: 8 },
-  input: { backgroundColor: theme.inputBg, borderWidth: 1.5, borderColor: theme.border,
-    borderRadius: 12, paddingHorizontal: 14, paddingVertical: 12, fontSize: 15, color: theme.text },
-  textArea: { height: 100, paddingTop: 12 },
-  inputError: { borderColor: theme.error },
+  scrollContent: { paddingBottom: 48 },
+
+  // Header sin caja, solo texto grande
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    paddingHorizontal: 28,
+    paddingTop: Platform.OS === 'ios' ? 56 : 28,
+    paddingBottom: 24,
+  },
+  titulo: {
+    fontSize: 34,
+    fontWeight: '800',
+    color: theme.primary,
+    letterSpacing: -1,
+    lineHeight: 38,
+  },
+  // Toggle sin caja: solo emoji + switch
+  themeToggle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingTop: 6,
+  },
+  themeEmoji: { fontSize: 18 },
+
+  formSection: {
+    paddingHorizontal: 28,
+  },
+  fieldGroup: { marginBottom: 24 },
+
+  // Label naranja pequeño
+  label: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: theme.primary,
+    marginBottom: 8,
+    letterSpacing: 1,
+    textTransform: 'uppercase',
+  },
+
+  // Input solo con borde inferior (underline style)
+  input: {
+    backgroundColor: 'transparent',
+    borderBottomWidth: 1.5,
+    borderBottomColor: theme.border,
+    paddingHorizontal: 0,
+    paddingVertical: 10,
+    fontSize: 16,
+    color: theme.text,
+  },
+  textArea: {
+    height: 90,
+    paddingTop: 10,
+    borderWidth: 0,
+    borderBottomWidth: 1.5,
+    borderBottomColor: theme.border,
+  },
+  // Error: borde inferior rosa
+  inputError: {
+    borderBottomColor: theme.error,
+  },
   errorText: { color: theme.error, fontSize: 12, marginTop: 4, flex: 1 },
   mensajeFooter: { flexDirection: 'row', alignItems: 'center', marginTop: 4 },
   charCount: { fontSize: 11, color: theme.textSecondary },
+
+  // Pills de categoría
   categorias: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  catBtn: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: 20,
-    borderWidth: 2, borderColor: theme.border, backgroundColor: theme.surfaceAlt },
-  catText: { fontSize: 13, fontWeight: '600', color: theme.textSecondary },
-  catTextActive: { color: '#FFFFFF' },
-  switchRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingVertical: 14, borderTopWidth: 1, borderTopColor: theme.border, marginBottom: 20 },
-  switchLabels: { flex: 1, marginRight: 12 },
+  catPill: {
+    paddingHorizontal: 16,
+    paddingVertical: 7,
+    borderRadius: 20,       // pill shape
+    borderWidth: 1.5,
+    backgroundColor: 'transparent',
+  },
+  catText: { fontSize: 13, fontWeight: '600' },
+
+  // Switch sin separador
+  switchRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 32,
+    paddingVertical: 4,
+  },
   switchDesc: { fontSize: 12, color: theme.textSecondary, marginTop: 2 },
-  btnGuardar: { backgroundColor: theme.primary, borderRadius: 14, paddingVertical: 16,
-    alignItems: 'center', justifyContent: 'center', minHeight: 52 },
-  btnDisabled: { opacity: 0.6 },
-  btnText: { color: '#FFFFFF', fontSize: 16, fontWeight: '700' },
-  footer: { textAlign: 'center', color: theme.textSecondary, fontSize: 12, marginTop: 16 },
+
+  // Botón principal pill sólido naranja
+  btnGuardar: {
+    backgroundColor: theme.primary,
+    borderRadius: 30,           // muy redondeado tipo pill
+    paddingVertical: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 56,
+  },
+  btnDisabled: { opacity: 0.5 },
+  btnText: { color: '#FFFFFF', fontSize: 16, fontWeight: '700', letterSpacing: 0.5 },
+  footer: {
+    textAlign: 'center',
+    color: theme.textSecondary,
+    fontSize: 11,
+    marginTop: 20,
+  },
 });
