@@ -144,9 +144,13 @@ export default function RegistrosScreen({ navigation }) {
         <View style={s.headerActions}>
           <View style={s.themeToggle}>
             <Text>{isDark ? '🌙' : '☀️'}</Text>
-            <Switch value={isDark} onValueChange={toggleTheme}
+            <Switch
+              value={isDark}
+              onValueChange={toggleTheme}
+              accessibilityLabel={isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
               trackColor={{ false: theme.switchTrackFalse, true: theme.switchTrackTrue }}
-              thumbColor={theme.switchThumb} />
+              thumbColor={theme.switchThumb}
+            />
           </View>
           {registros.length > 0 && (
             <TouchableOpacity onPress={confirmarLimpiarTodo} style={s.btnLimpiar}>
