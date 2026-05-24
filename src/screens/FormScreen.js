@@ -162,7 +162,12 @@ export default function FormScreen({ navigation }) {
           </View>
 
           <TouchableOpacity style={[s.btnGuardar, guardando && s.btnDisabled]}
-            onPress={handleGuardar} disabled={guardando} activeOpacity={0.85}>
+            onPress={handleGuardar}
+            disabled={guardando}
+            activeOpacity={0.85}
+            accessibilityRole="button"
+            accessibilityLabel="Guardar registro"
+            accessibilityState={{ disabled: guardando }}>
             {guardando ? <ActivityIndicator color="#fff" size="small" /> :
               <Text style={s.btnText}>Guardar registro</Text>}
           </TouchableOpacity>
