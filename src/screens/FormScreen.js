@@ -1,7 +1,3 @@
-// src/screens/FormScreen.js
-
-// Diseño minimalista con inputs underline y botones tipo pill
-
 import React, { useState, useCallback } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, ScrollView,
@@ -31,7 +27,6 @@ const validarForm = (form) => {
   return errores;
 };
 
-// Campo con solo borde inferior (estilo minimalista underline)
 function InputField({ label, error, theme, style, ...props }) {
   const s = makeStyles(theme);
   return (
@@ -87,17 +82,14 @@ export default function FormScreen({ navigation }) {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView
-        style={s.container}
+        style={{ flex: 1, backgroundColor: theme.background }}
         contentContainerStyle={s.scrollContent}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
-        {/* ── HEADER minimalista ── */}
+        {/* HEADER */}
         <View style={s.header}>
-          <View>
-            <Text style={s.titulo}>Nuevo{'\n'}Registro</Text>
-          </View>
-          {/* Toggle sin caja, solo switch + emoji */}
+          <Text style={s.titulo}>Nuevo{'\n'}Registro</Text>
           <View style={s.themeToggle}>
             <Text style={s.themeEmoji}>{isDark ? '🌙' : '☀️'}</Text>
             <Switch
@@ -109,10 +101,7 @@ export default function FormScreen({ navigation }) {
           </View>
         </View>
 
-        {/* ── FORMULARIO ── */}
         <View style={s.formSection}>
-
-          {/* Nombre */}
           <InputField
             label="Nombre completo *"
             placeholder="Juan Pérez"
@@ -123,8 +112,6 @@ export default function FormScreen({ navigation }) {
             autoCapitalize="words"
             maxLength={60}
           />
-
-          {/* Email */}
           <InputField
             label="Correo electrónico *"
             placeholder="correo@ejemplo.com"
@@ -136,8 +123,6 @@ export default function FormScreen({ navigation }) {
             autoCapitalize="none"
             maxLength={100}
           />
-
-          {/* Teléfono */}
           <InputField
             label="Teléfono"
             placeholder="+56 9 1234 5678  (opcional)"
@@ -149,7 +134,7 @@ export default function FormScreen({ navigation }) {
             maxLength={20}
           />
 
-          {/* Categoría — pills horizontales */}
+          {/* Categoría pills */}
           <View style={s.fieldGroup}>
             <Text style={s.label}>Categoría</Text>
             <View style={s.categorias}>
@@ -161,7 +146,6 @@ export default function FormScreen({ navigation }) {
                     key={cat}
                     style={[
                       s.catPill,
-                      // Inactivo: outline del color — Activo: relleno del color
                       isActive
                         ? { backgroundColor: colorCat, borderColor: colorCat }
                         : { borderColor: colorCat },
@@ -200,7 +184,7 @@ export default function FormScreen({ navigation }) {
             </View>
           </View>
 
-          {/* Switch notificaciones — limpio sin separador */}
+          {/* Switch notificaciones */}
           <View style={s.switchRow}>
             <View>
               <Text style={s.label}>Notificaciones</Text>
@@ -214,7 +198,7 @@ export default function FormScreen({ navigation }) {
             />
           </View>
 
-          {/* Botón guardar — pill sólido naranja */}
+          {/* Botón guardar */}
           <TouchableOpacity
             style={[s.btnGuardar, guardando && s.btnDisabled]}
             onPress={handleGuardar}
@@ -235,10 +219,7 @@ export default function FormScreen({ navigation }) {
 }
 
 const makeStyles = (theme) => StyleSheet.create({
-  container: { flex: 1, backgroundColor: theme.background },
   scrollContent: { paddingBottom: 48 },
-
-  // Header sin caja, solo texto grande
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -246,6 +227,7 @@ const makeStyles = (theme) => StyleSheet.create({
     paddingHorizontal: 28,
     paddingTop: Platform.OS === 'ios' ? 56 : 28,
     paddingBottom: 24,
+    backgroundColor: theme.background,
   },
   titulo: {
     fontSize: 34,
@@ -254,21 +236,10 @@ const makeStyles = (theme) => StyleSheet.create({
     letterSpacing: -1,
     lineHeight: 38,
   },
-  // Toggle sin caja: solo emoji + switch
-  themeToggle: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    paddingTop: 6,
-  },
+  themeToggle: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingTop: 6 },
   themeEmoji: { fontSize: 18 },
-
-  formSection: {
-    paddingHorizontal: 28,
-  },
+  formSection: { paddingHorizontal: 28, backgroundColor: theme.background },
   fieldGroup: { marginBottom: 24 },
-
-  // Label naranja pequeño
   label: {
     fontSize: 11,
     fontWeight: '700',
@@ -277,8 +248,6 @@ const makeStyles = (theme) => StyleSheet.create({
     letterSpacing: 1,
     textTransform: 'uppercase',
   },
-
-  // Input solo con borde inferior (underline style)
   input: {
     backgroundColor: 'transparent',
     borderBottomWidth: 1.5,
@@ -295,26 +264,19 @@ const makeStyles = (theme) => StyleSheet.create({
     borderBottomWidth: 1.5,
     borderBottomColor: theme.border,
   },
-  // Error: borde inferior rosa
-  inputError: {
-    borderBottomColor: theme.error,
-  },
+  inputError: { borderBottomColor: theme.error },
   errorText: { color: theme.error, fontSize: 12, marginTop: 4, flex: 1 },
   mensajeFooter: { flexDirection: 'row', alignItems: 'center', marginTop: 4 },
   charCount: { fontSize: 11, color: theme.textSecondary },
-
-  // Pills de categoría
   categorias: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   catPill: {
     paddingHorizontal: 16,
     paddingVertical: 7,
-    borderRadius: 20,       // pill shape
+    borderRadius: 20,
     borderWidth: 1.5,
     backgroundColor: 'transparent',
   },
   catText: { fontSize: 13, fontWeight: '600' },
-
-  // Switch sin separador
   switchRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -323,11 +285,9 @@ const makeStyles = (theme) => StyleSheet.create({
     paddingVertical: 4,
   },
   switchDesc: { fontSize: 12, color: theme.textSecondary, marginTop: 2 },
-
-  // Botón principal pill sólido naranja
   btnGuardar: {
     backgroundColor: theme.primary,
-    borderRadius: 30,           // muy redondeado tipo pill
+    borderRadius: 30,
     paddingVertical: 18,
     alignItems: 'center',
     justifyContent: 'center',

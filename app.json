@@ -1,0 +1,15 @@
+{
+  "expo": {
+    "name": "AppTarea",
+    "slug": "AppTarea",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "backgroundColor": "#000000",
+    "ios": {
+      "backgroundColor": "#000000"
+    },
+    "android": {
+      "backgroundColor": "#000000"
+    }
+  }
+}

@@ -1,6 +1,3 @@
-// src/screens/RegistrosScreen.js
-// Diseño minimalista con tarjetas planas y barra lateral delgada
-
 import React, { useState, useCallback } from 'react';
 import {
   View, Text, FlatList, TouchableOpacity,
@@ -23,7 +20,6 @@ export default function RegistrosScreen({ navigation }) {
   const [registros, setRegistros] = useState([]);
   const [cargando, setCargando] = useState(true);
 
-  // Recarga datos cada vez que la pantalla recibe foco
   useFocusEffect(
     useCallback(() => {
       let activo = true;
@@ -76,34 +72,23 @@ export default function RegistrosScreen({ navigation }) {
     } catch { return 'Fecha desconocida'; }
   }, []);
 
-  // Tarjeta minimalista con barra lateral delgada
   const renderItem = useCallback(({ item }) => {
     const colorCat = COLORES_CATEGORIA[item.categoria] || '#FF7A00';
     return (
       <View style={s.card}>
-        {/* Barra lateral delgada (3px) de color de categoría */}
         <View style={[s.cardAccent, { backgroundColor: colorCat }]} />
-
         <View style={s.cardInner}>
-          {/* Nombre + botón eliminar solo símbolo */}
           <View style={s.cardTop}>
             <Text style={s.cardNombre} numberOfLines={1}>{item.nombre}</Text>
             <TouchableOpacity
               onPress={() => confirmarEliminar(item.id, item.nombre)}
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             >
-              {/* Solo el símbolo, sin círculo de fondo */}
               <Text style={s.btnEliminarText}>✕</Text>
             </TouchableOpacity>
           </View>
-
-          {/* Email */}
           <Text style={s.cardEmail} numberOfLines={1}>{item.email}</Text>
-
-          {/* Mensaje */}
           <Text style={s.cardMensaje} numberOfLines={2}>{item.mensaje}</Text>
-
-          {/* Footer: categoría pill + badges + fecha */}
           <View style={s.cardFooter}>
             <View style={[s.catPill, { borderColor: colorCat }]}>
               <Text style={[s.catPillText, { color: colorCat }]}>{item.categoria}</Text>
@@ -127,8 +112,8 @@ export default function RegistrosScreen({ navigation }) {
   }, [theme, s, confirmarEliminar, formatearFecha]);
 
   return (
-    <View style={s.container}>
-      {/* Header minimalista */}
+    <View style={{ flex: 1, backgroundColor: theme.background }}>
+      {/* HEADER */}
       <View style={s.header}>
         <View>
           <Text style={s.titulo}>Registros</Text>
@@ -137,7 +122,6 @@ export default function RegistrosScreen({ navigation }) {
           </Text>
         </View>
         <View style={s.headerRight}>
-          {/* Toggle sin caja */}
           <View style={s.themeToggle}>
             <Text style={s.themeEmoji}>{isDark ? '🌙' : '☀️'}</Text>
             <Switch
@@ -147,7 +131,6 @@ export default function RegistrosScreen({ navigation }) {
               thumbColor={theme.switchThumb}
             />
           </View>
-          {/* Limpiar todo: solo texto rosa, sin borde ni fondo */}
           {registros.length > 0 && (
             <TouchableOpacity onPress={confirmarLimpiarTodo}>
               <Text style={s.btnLimpiarText}>Limpiar todo</Text>
@@ -156,7 +139,6 @@ export default function RegistrosScreen({ navigation }) {
         </View>
       </View>
 
-      {/* Separador delgado */}
       <View style={s.separador} />
 
       {registros.length === 0 && !cargando ? (
@@ -188,8 +170,6 @@ export default function RegistrosScreen({ navigation }) {
 }
 
 const makeStyles = (theme) => StyleSheet.create({
-  container: { flex: 1, backgroundColor: theme.background },
-
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -197,34 +177,20 @@ const makeStyles = (theme) => StyleSheet.create({
     paddingHorizontal: 28,
     paddingTop: Platform.OS === 'ios' ? 56 : 28,
     paddingBottom: 16,
+    backgroundColor: theme.background,
   },
   titulo: { fontSize: 34, fontWeight: '800', color: theme.primary, letterSpacing: -1 },
   subtitulo: { fontSize: 13, color: theme.textSecondary, marginTop: 2 },
   headerRight: { alignItems: 'flex-end', gap: 8 },
   themeToggle: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   themeEmoji: { fontSize: 18 },
-
-  // Limpiar todo: solo texto rosa sin fondo
-  btnLimpiarText: {
-    color: theme.error,
-    fontSize: 12,
-    fontWeight: '600',
-  },
-
+  btnLimpiarText: { color: theme.error, fontSize: 12, fontWeight: '600' },
   separador: { height: 1, backgroundColor: theme.border, marginHorizontal: 28 },
   itemSeparador: { height: 1, backgroundColor: theme.border, marginHorizontal: 28 },
-
   lista: { paddingBottom: 32 },
-
-  // Tarjeta plana sin sombra fuerte
-  card: {
-    flexDirection: 'row',
-    backgroundColor: theme.surface,
-  },
-  // Barra lateral delgada 3px
+  card: { flexDirection: 'row', backgroundColor: theme.background },
   cardAccent: { width: 3 },
   cardInner: { flex: 1, paddingVertical: 16, paddingHorizontal: 20 },
-
   cardTop: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -232,29 +198,15 @@ const makeStyles = (theme) => StyleSheet.create({
     marginBottom: 2,
   },
   cardNombre: { fontSize: 15, fontWeight: '700', color: theme.text, flex: 1, marginRight: 8 },
-
-  // Botón eliminar solo símbolo, sin círculo
   btnEliminarText: { color: theme.textSecondary, fontSize: 14, fontWeight: '300' },
-
   cardEmail: { fontSize: 12, color: theme.textSecondary, marginBottom: 6 },
   cardMensaje: { fontSize: 13, color: theme.textSecondary, lineHeight: 18, marginBottom: 10 },
-
   cardFooter: { flexDirection: 'row', alignItems: 'center', gap: 6, flexWrap: 'wrap' },
-
-  // Pill de categoría outline
-  catPill: {
-    paddingHorizontal: 10,
-    paddingVertical: 3,
-    borderRadius: 20,
-    borderWidth: 1,
-  },
+  catPill: { paddingHorizontal: 10, paddingVertical: 3, borderRadius: 20, borderWidth: 1 },
   catPillText: { fontSize: 11, fontWeight: '700' },
-
   badge: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 8 },
   badgeText: { fontSize: 11, fontWeight: '600' },
   cardFecha: { fontSize: 11, color: theme.textSecondary, marginLeft: 'auto' },
-
-  // Estado vacío
   empty: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 40 },
   emptyIcon: { fontSize: 48, color: theme.border, marginBottom: 16 },
   emptyTitle: { fontSize: 20, fontWeight: '700', color: theme.text, marginBottom: 8 },

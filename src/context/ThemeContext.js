@@ -1,6 +1,3 @@
-// src/context/ThemeContext.js
-// Maneja el contexto global del tema dark/light
-
 import React, { createContext, useState, useContext, useMemo } from 'react';
 
 export const themes = {

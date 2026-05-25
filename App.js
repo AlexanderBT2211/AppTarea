@@ -1,7 +1,3 @@
-// App.js
-// Descripción: Punto de entrada de la aplicación.
-//              Configura el tema global y la navegación entre pantallas.
-
 import React from 'react';
 import { Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
@@ -19,11 +15,26 @@ function TabIcon({ emoji }) {
 
 function AppNavigator() {
   const { theme } = useTheme();
+
   return (
-    <NavigationContainer>
+    // NavigationContainer con fondo del tema para evitar flash blanco
+    <NavigationContainer
+      theme={{
+        dark: theme.name === 'dark',
+        colors: {
+          primary: theme.primary,
+          background: theme.background,
+          card: theme.surface,
+          text: theme.text,
+          border: theme.border,
+          notification: theme.primary,
+        },
+      }}
+    >
       <Tab.Navigator
         screenOptions={{
           headerShown: false,
+          contentStyle: { backgroundColor: theme.background },
           tabBarStyle: {
             backgroundColor: theme.surface,
             borderTopColor: theme.border,
